@@ -27,7 +27,7 @@ main = S.withSession $ \s -> do
     -- Perform authenticated API requests
     let opts = baseOpts & auth ?~ oauth2Token (encodeUtf8 token)
 
-    r2 <- S.getWith baseOpts s (apiUrl ++ "/heroes/")
+    r2 <- S.getWith opts s (apiUrl ++ "/heroes/")
 
     let count = r2 ^? responseBody . key "count" . _Integer
 
