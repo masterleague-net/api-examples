@@ -1,20 +1,21 @@
+# coding: utf-8
+
 import requests  # http://python-requests.org/
 
-# Premium user authentication process and API access example
-r = requests.post('https://api.masterleague.net/auth/token/', data={'username': 'user', 'password': '12345'})
-
-if 'token' not in r.json():
-    print(r.text)
-    raise ValueError("Unable to extract authentication token!")
-
-token = r.json()['token']
+API_ROOT = 'https://api.masterleague.net'
+API_USER = None
+API_PASS = None
 
 s = requests.Session()
-s.headers.update({'Authorization': 'Token ' + token})
 
-r = s.get('https://api.masterleague.net/heroes.json')
-print(r.text)
+if API_USER is not None and API_PASS is not None:
+    r = requests.post(API_ROOT + '/auth/token/', data={'username': API_USER, 'password': API_PASS})
+    if 'token' not in r.json():
+        print(r.text)
+        raise ValueError("Unable to extract authentication token!")
 
-# Anonymous user access example
-r = requests.get('https://api.masterleague.net/heroes.json')
+    token = r.json()['token']
+    s.headers.update({'Authorization': 'Token ' + token})
+
+r = s.get(API_ROOT + '/heroes.json')
 print(r.text)
